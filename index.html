@@ -295,15 +295,15 @@
       applyPromocodeButton.addEventListener("click", function() {
         const promocode = promocodeInput.value.trim().toUpperCase();
         switch(promocode) {
+          case 'Volodymyr':
+            count += 9999;
+            tapValue += 1;
+            break;
           case 'START':
             count += 1000;
             tapValue += 1;
             break;
           case 'COIN':
-            count += 10000;
-            tapValue += 1;
-            break;
-          case 'Volodymyr':
             count += 10000;
             tapValue += 1;
             break;
