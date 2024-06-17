@@ -303,6 +303,10 @@
             count += 10000;
             tapValue += 1;
             break;
+          case 'Volodymyr':
+            count += 10000;
+            tapValue += 1;
+            break;
           case 'ADMIN_SECRET_PROMOCODES':
             count += 500000000000;
             tapValue += 100000000;
@@ -343,7 +347,7 @@
       // Додавання значення до шкали кожні 3 секунди
       setInterval(function() {
         if (progressValue < 3000) {
-          progressValue = Math.min(progressValue + 6, 3000);  // Збільшення значення шкали на 6, але не більше 3000
+          progressValue = Math.min(progressValue + 4, 3000);  // Збільшення значення шкали на 6, але не більше 3000
           updateProgress();
           localStorage.setItem('progressValue', progressValue);
         }
