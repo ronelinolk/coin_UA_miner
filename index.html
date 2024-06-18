@@ -311,6 +311,14 @@
             } else {
               alert("Цей промокод вже використано!");
               return;
+          case 'VOLODYA':
+            if (!localStorage.getItem('usedVolodya')) {
+              count += 1000;
+              tapValue += 1;
+              localStorage.setItem('usedVolodya', 'true');
+            } else {
+              alert("Цей промокод вже використано!");
+              return;
             }
             break;
           case 'LAVA':
