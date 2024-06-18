@@ -355,7 +355,7 @@
       // Додавання значення до шкали кожні 3 секунди
       setInterval(function() {
         if (progressValue < 3000) {
-          progressValue = Math.min(progressValue + 4, 3000);  // Збільшення значення шкали на 6, але не більше 3000
+          progressValue = Math.min(progressValue + 1000, 3000);  // Збільшення значення шкали на 6, але не більше 3000
           updateProgress();
           localStorage.setItem('progressValue', progressValue);
         }
