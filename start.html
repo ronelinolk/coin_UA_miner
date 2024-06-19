@@ -86,7 +86,7 @@
       if (!localStorage.getItem(email)) {
         localStorage.setItem(email, password);
         alert('Реєстрація успішна. Можете увійти.');
-        window.location.href = '/index.html'; // Перенаправлення на іншу сторінку
+        window.location.href = 'index.html'; // Перенаправлення на іншу сторінку
       } else {
         document.getElementById('register-error').textContent = 'Ця пошта вже зареєстрована.';
       }
@@ -99,7 +99,7 @@
 
       if (localStorage.getItem(email) === password) {
         alert('Авторизація успішна.');
-        window.location.href = '/index.html'; // Перенаправлення на іншу сторінку
+        window.location.href = 'index.html'; // Перенаправлення на іншу сторінку
       } else {
         document.getElementById('login-error').textContent = 'Неправильний email або пароль.';
       }
