@@ -49,25 +49,21 @@
   <div class="container">
     <h2>Реєстрація / Авторизація</h2>
     <div id="register-form">
-    function register() {
-      var email = document.getElementById('regEmail').value;
-      var password = document.getElementById('regPassword').value;
-
-      if (!localStorage.getItem(email)) {
-        localStorage.setItem(email, password);
-        document.getElementById('register-error').textContent = 'Реєстрація успішна. Можете увійти.';
-        // Очистити поля відомостей
-        document.getElementById('regEmail').value = '';
-        document.getElementById('regPassword').value = '';
-      } else {
-        document.getElementById('register-error').textContent = 'Ця пошта вже зареєстрована.';
-      }
-    }
-
+      <h3>Реєстрація</h3>
+      <div class="form-group">
+        <label for="regEmail">Email:</label>
+        <input type="email" id="regEmail" required>
+      </div>
+      <div class="form-group">
+        <label for="regPassword">Пароль:</label>
+        <input type="password" id="regPassword" required>
+      </div>
+      <input type="submit" value="Зареєструватись" onclick="register()">
+      <div class="error-message" id="register-error"></div>
     </div>
 
     <div id="login-form" style="display: none;">
-  <h3>Авторизація</h3>
+      <h3>Авторизація</h3>
       <div class="form-group">
         <label for="loginEmail">Email:</label>
         <input type="email" id="loginEmail" required>
@@ -78,8 +74,6 @@
       </div>
       <input type="submit" value="Увійти" onclick="login()">
       <div class="error-message" id="login-error"></div>
-    </div>
-  </div>
     </div>
   </div>
 
@@ -94,7 +88,7 @@
         alert('Реєстрація успішна. Можете увійти.');
         window.location.href = '/index.html'; // Перенаправлення на іншу сторінку
       } else {
-        alert('Ця пошта вже зареєстрована.');
+        document.getElementById('register-error').textContent = 'Ця пошта вже зареєстрована.';
       }
     }
 
@@ -107,7 +101,7 @@
         alert('Авторизація успішна.');
         window.location.href = '/index.html'; // Перенаправлення на іншу сторінку
       } else {
-        alert('Неправильний email або пароль.');
+        document.getElementById('login-error').textContent = 'Неправильний email або пароль.';
       }
     }
   </script>
