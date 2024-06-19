@@ -77,6 +77,9 @@
       <button onclick="login()">Увійти</button>
       <div class="error-message" id="login-error"></div>
     </div>
+
+    <!-- Кнопка "Авторизуватися" з розміром як кнопка "Зареєструватися" -->
+    <button style="width: 100%; background-color: #4CAF50; color: white;" onclick="showLoginForm()">Авторизуватися</button>
   </div>
 
   <script>
@@ -102,13 +105,22 @@
 
       if (localStorage.getItem(email) === password) {
         alert('Авторизація успішна.');
-        window.location.href = '/index.html'; // Перенаправлення на іншу сторінку після успішної авторизації
+        window.location.href = 'index.html'; // Перенаправлення на іншу сторінку після успішної авторизації
       } else {
         document.getElementById('login-error').textContent = 'Неправильний email або пароль.';
       }
     }
 
-    // Функція для переключення між формами реєстрації та авторизації
+    // Функція для переключення на форму авторизації
+    function showLoginForm() {
+      var registerForm = document.getElementById('register-form');
+      var loginForm = document.getElementById('login-form');
+
+      registerForm.style.display = 'none';
+      loginForm.style.display = 'block';
+    }
+
+    // Функція для переключення на форму реєстрації
     function switchForm() {
       var registerForm = document.getElementById('register-form');
       var loginForm = document.getElementById('login-form');
