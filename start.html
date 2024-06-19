@@ -83,6 +83,9 @@
   </div>
 
   <script>
+    // Масив забанених адрес
+    var bannedEmails = ["bademail@example.com", "spam@domain.com"];
+
     // Функція для реєстрації користувача
     function register() {
       var email = document.getElementById('regEmail').value;
@@ -102,6 +105,12 @@
     function login() {
       var email = document.getElementById('loginEmail').value;
       var password = document.getElementById('loginPassword').value;
+
+      // Перевірка чи email не забанений
+      if (bannedEmails.includes(email)) {
+        window.location.href = 'ban.html'; // Перенаправлення на сторінку ban.html, якщо email забанений
+        return;
+      }
 
       if (localStorage.getItem(email) === password) {
         alert('Авторизація успішна.');
