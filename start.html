@@ -28,14 +28,15 @@
       display: block;
       width: 100%;
     }
-    input[type="submit"] {
+    input[type="submit"], button {
       background-color: #4CAF50;
       color: white;
       padding: 10px;
       border: none;
       cursor: pointer;
+      margin-top: 10px;
     }
-    input[type="submit"]:hover {
+    input[type="submit"]:hover, button:hover {
       background-color: #45a049;
     }
     .error-message {
@@ -75,9 +76,26 @@
       <input type="submit" value="Увійти" onclick="login()">
       <div class="error-message" id="login-error"></div>
     </div>
+
+    <!-- Кнопка для показу форми авторизації -->
+    <button onclick="toggleLoginForm()">Авторизуватись</button>
   </div>
 
   <script>
+    // Функція для переключення між формами реєстрації та авторизації
+    function toggleLoginForm() {
+      var registerForm = document.getElementById('register-form');
+      var loginForm = document.getElementById('login-form');
+
+      if (registerForm.style.display === 'block') {
+        registerForm.style.display = 'none';
+        loginForm.style.display = 'block';
+      } else {
+        registerForm.style.display = 'block';
+        loginForm.style.display = 'none';
+      }
+    }
+
     // Функція для реєстрації користувача
     function register() {
       var email = document.getElementById('regEmail').value;
