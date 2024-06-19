@@ -1,21 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Start UA Coin Game</title>
-  <style>
-    body {
-      margin: 0;
-      background-image: url('start.png');
-      background-size: cover;
-      height: 100vh;
-    }
-  </style>
-  <script>
-    setTimeout(function() {
-      window.location.href = "index.html";
-    }, 5000);
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизація та реєстрація</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h2>Увійдіть у свій акаунт або зареєструйтесь</h2>
+        <div id="authForm">
+            <input type="email" id="email" placeholder="Електронна адреса"><br>
+            <input type="password" id="password" placeholder="Пароль"><br>
+            <button onclick="login()">Увійти</button>
+            <button onclick="openRegisterForm()">Зареєструватись</button>
+            <div class="error-message" id="authError"></div>
+        </div>
+
+        <div id="registerForm" style="display: none;">
+            <input type="email" id="regEmail" placeholder="Електронна адреса"><br>
+            <input type="password" id="regPassword" placeholder="Пароль"><br>
+            <button onclick="register()">Зареєструватись</button>
+            <div class="error-message" id="regError"></div>
+        </div>
+    </div>
+
+    <script>
+        // Список заблокованих адрес
+        var bannedEmails = ["blocked@example.com"];
+
+        // Об'єкт для збереження даних користувачів
+        var users = [
+            { email: "user@example.com", password: "password" }
+        ];
+
+        function login() {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            if (isBanned(email)) {
+                window.location.href = 'ban.html';
+                return;
+            }
+
+            var user = users.find(u => u.email === email && u.password === password);
+            if (user) {
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('authError').innerText = 'Дані не вірні!';
+            }
+        }
+
+        function openRegisterForm() {
+            document.getElementById('authForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+        }
+
+        function register() {
+            var email = document.getElementById('regEmail').value;
+            var password = document.getElementById('regPassword').value;
+
+            if (isBanned(email)) {
+                window.location.href = 'ban.html';
+                return;
+            }
+
+            users.push({ email: email, password: password });
+            console.log('Зареєстровано:', email, password);
+
+            // Переадресація на index.html
+            window.location.href = 'index.html';
+        }
+
+        function isBanned(email) {
+            return bannedEmails.includes(email);
+        }
+    </script>
 </body>
 </html>
