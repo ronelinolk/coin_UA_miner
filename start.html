@@ -58,7 +58,7 @@
             <input type="email" id="email" placeholder="Електронна адреса"><br>
             <input type="password" id="password" placeholder="Пароль"><br>
             <button onclick="login()">Увійти</button>
-            <button onclick="openRegisterForm()">Зареєструватись</button>
+            <button id="registerBtn" onclick="openRegisterForm()">Зареєструватись</button>
             <div class="error-message" id="authError"></div>
         </div>
 
@@ -72,12 +72,19 @@
 
     <script>
         // Список заблокованих адрес
-        var bannedEmails = ["litynskyiroman2023@gmail.com"];
+        var bannedEmails = ["blocked@example.com"];
 
         // Об'єкт для збереження даних користувачів
         var users = [
             { email: "user@example.com", password: "password" }
         ];
+
+        // Перевірка, чи вже зареєстрована електронна адреса
+        var registeredEmails = [];
+
+        function isEmailRegistered(email) {
+            return registeredEmails.includes(email);
+        }
 
         function login() {
             var email = document.getElementById('email').value;
@@ -109,6 +116,13 @@
                 window.location.href = 'ban.html';
                 return;
             }
+
+            if (isEmailRegistered(email)) {
+                alert('Ця електронна адреса вже зареєстрована!');
+                return;
+            }
+
+            registeredEmails.push(email); // Додаємо до списку зареєстрованих адрес
 
             users.push({ email: email, password: password });
             console.log('Зареєстровано:', email, password);
