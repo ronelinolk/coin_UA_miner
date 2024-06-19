@@ -32,6 +32,8 @@
       border: none;
       cursor: pointer;
       text-align: center;
+      border-radius: 10px; /* Закруглені кути */
+      background-color: #e6e6e6; /* Кольоровий фон */
     }
     input[type="submit"], button {
       background-color: #4CAF50;
@@ -62,6 +64,8 @@
       </div>
       <button onclick="register()">Зареєструватись</button>
       <div class="error-message" id="register-error"></div>
+      <!-- Кнопка для переключення на вкладку Авторизація -->
+      <button style="width: 100%; background-color: #4CAF50; color: white;" onclick="switchToLogin()">Авторизація</button>
     </div>
 
     <div id="login-form" style="display: none;">
@@ -76,15 +80,14 @@
       </div>
       <button onclick="login()">Увійти</button>
       <div class="error-message" id="login-error"></div>
+      <!-- Кнопка для переключення на вкладку Реєстрація -->
+      <button style="width: 100%; background-color: #4CAF50; color: white;" onclick="switchToRegister()">Реєстрація</button>
     </div>
-
-    <!-- Кнопка "Авторизуватися" з розміром як кнопка "Зареєструватися" -->
-    <button style="width: 100%; background-color: #4CAF50; color: white;" onclick="showLoginForm()">Авторизуватися</button>
   </div>
 
   <script>
     // Масив забанених адрес
-    var bannedEmails = ["lityskyiroman2023@gmail.com", "spam@domain.com"];
+    var bannedEmails = ["bademail@example.com", "spam@domain.com"];
 
     // Функція для реєстрації користувача
     function register() {
@@ -95,7 +98,7 @@
         localStorage.setItem('registeredEmail', email);
         localStorage.setItem(email, password);
         alert('Реєстрація успішна. Можете увійти.');
-        switchForm(); // Переключаємо на форму авторизації після реєстрації
+        switchToLogin(); // Переключаємо на форму авторизації після реєстрації
       } else {
         document.getElementById('register-error').textContent = 'Ви вже зареєстровані.';
       }
@@ -121,7 +124,7 @@
     }
 
     // Функція для переключення на форму авторизації
-    function showLoginForm() {
+    function switchToLogin() {
       var registerForm = document.getElementById('register-form');
       var loginForm = document.getElementById('login-form');
 
@@ -130,12 +133,12 @@
     }
 
     // Функція для переключення на форму реєстрації
-    function switchForm() {
+    function switchToRegister() {
       var registerForm = document.getElementById('register-form');
       var loginForm = document.getElementById('login-form');
 
-      registerForm.style.display = 'none';
-      loginForm.style.display = 'block';
+      registerForm.style.display = 'block';
+      loginForm.style.display = 'none';
     }
   </script>
 </body>
