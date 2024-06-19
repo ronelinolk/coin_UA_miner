@@ -3,7 +3,7 @@
 <head>
   <title>UA Coin Game</title>
   <style>
-    body {
+   body {
       background-color: #111;
       color: #fff;
       font-family: sans-serif;
@@ -173,10 +173,18 @@
     .profit-option:hover {
       background-color: #333;
     }
-
-    .promocode-error {
-      color: red;
-      display: none;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+    }
+    .container {
+        width: 100%;
+        max-width: 1200px; /* максимальна ширина контейнера, можна змінити на потрібне значення */
+        margin: 0 auto; /* вирівнюємо по центру */
+        background-color: #fff;
+        padding: 20px;
+        box-sizing: border-box; /* враховуємо padding у визначенні ширини */
     }
   </style>
   <script>
@@ -194,9 +202,9 @@
       const levelElement = document.querySelector(".level span");
       const statValueElement = document.querySelector(".stat:nth-child(2) .stat-value");
       const hourlyProfitElement = document.querySelector(".stat:nth-child(3) .stat-value");
-      const tapProfitElement = document.querySelector(".stat:nth-child(1) .stat-value");  
-      const progressText = document.querySelector(".progress span");  
-      const progressBarFill = document.querySelector(".progress-fill");  
+      const tapProfitElement = document.querySelector(".stat:nth-child(1) .stat-value");  // Елемент для прибутку за тап
+      const progressText = document.querySelector(".progress span");  // Елемент для тексту шкали
+      const progressBarFill = document.querySelector(".progress-fill");  // Елемент для заповнення шкали
       
       let count = parseInt(localStorage.getItem('count')) || 0;
       let tapValue = parseInt(localStorage.getItem('tapValue')) || 1;
@@ -204,69 +212,67 @@
       let nextLevelCost = parseInt(localStorage.getItem('nextLevelCost')) || 500;
       let hourlyProfit = parseInt(localStorage.getItem('hourlyProfit')) || 0;
       let lastVisit = parseInt(localStorage.getItem('lastVisit')) || Date.now();
-      let progressValue = parseInt(localStorage.getItem('progressValue')) || 3000;
+      let progressValue = parseInt(localStorage.getItem('progressValue')) || 3000;  // Поточне значення шкали
 
       const levelCosts = [
         500, 5000, 100000, 1000000, 10000000,
         50000000, 100000000, 1000000000, 10000000000, 50000000000
       ];
 
-      const usedPromocodes = JSON.parse(localStorage.getItem('usedPromocodes')) || [];
+      // Оновлення балансу після відсутності
+      const currentTime = Date.now();
+      const timeDifference = currentTime - lastVisit;
+      const hoursAway = timeDifference / (1000 * 60 * 60);
+      const profitFromAbsence = Math.floor(hoursAway * hourlyProfit);
+      count += profitFromAbsence;
+      balance.textContent = count;
+      localStorage.setItem('count', count);
 
-      const updateProgress = () => {
+      balance.textContent = count;
+      levelElement.textContent = `Level ${level}/10`;
+      statValueElement.textContent = level < 10 ? levelCosts[level - 1] : 0;
+      hourlyProfitElement.textContent = hourlyProfit;
+      tapProfitElement.textContent = `+${tapValue}`;  // Оновлення тексту прибутку за тап
+
+      // Оновлення тексту і ширини шкали
+      function updateProgress() {
         progressText.textContent = `${progressValue}/3000`;
         const progressPercentage = (progressValue / 3000) * 100;
         progressBarFill.style.width = `${progressPercentage}%`;
-      };
+      }
 
-      const updateStats = () => {
-        balance.textContent = count;
-        levelElement.textContent = `Level ${level}/10`;
-        statValueElement.textContent = level < 10 ? levelCosts[level - 1] : 0;
-        hourlyProfitElement.textContent = hourlyProfit;
-        tapProfitElement.textContent = `+${tapValue}`;
-      };
-
-      const addProfitFromAbsence = () => {
-        const currentTime = Date.now();
-        const timeDifference = currentTime - lastVisit;
-        const hoursAway = timeDifference / (1000 * 60 * 60);
-        const profitFromAbsence = Math.floor(hoursAway * hourlyProfit);
-        count += profitFromAbsence;
-        localStorage.setItem('count', count);
-        updateStats();
-      };
-
-      addProfitFromAbsence();
+      // Оновлення тексту і шкали при завантаженні сторінки
       updateProgress();
 
-      hamster.addEventListener("click", () => {
+      hamster.addEventListener("click", function() {
         if (progressValue > 0) {
           count += tapValue;
           progressValue -= 1;
+          balance.textContent = count;
           localStorage.setItem('count', count);
-          updateStats();
           updateProgress();
           localStorage.setItem('progressValue', progressValue);
         }
       });
 
-      boostButton.addEventListener("click", () => {
+      boostButton.addEventListener("click", function() {
         if (count >= 1000) {
           count -= 1000;
           tapValue++;
+          tapProfitElement.textContent = `+${tapValue}`;  // Оновлення тексту прибутку за тап
+          balance.textContent = count;
           localStorage.setItem('count', count);
           localStorage.setItem('tapValue', tapValue);
-          updateStats();
         } else {
           alert("Недостатньо тапів для Boost!");
         }
       });
 
-      boostLevelButton.addEventListener("click", () => {
+      boostLevelButton.addEventListener("click", function() {
         if (level <= 10 && count >= levelCosts[level - 1]) {
           count -= levelCosts[level - 1];
           level++;
+          balance.textContent = count;
           localStorage.setItem('count', count);
           localStorage.setItem('level', level);
           if (level <= 10) {
@@ -277,24 +283,17 @@
           } else {
             statValueElement.textContent = 0;
           }
-          updateStats();
         } else {
           alert("Недостатньо тапів для підвищення рівня!");
         }
       });
 
-      promocodeButton.addEventListener("click", () => {
+      promocodeButton.addEventListener("click", function() {
         promocodeContainer.style.display = 'flex';
       });
 
-      applyPromocodeButton.addEventListener("click", () => {
+      applyPromocodeButton.addEventListener("click", function() {
         const promocode = promocodeInput.value.trim().toUpperCase();
-
-        if (usedPromocodes.includes(promocode)) {
-          document.querySelector('.promocode-error').style.display = 'block';
-          return;
-        }
-
         switch(promocode) {
           case 'START':
             count += 1000;
@@ -308,103 +307,130 @@
             count += 5000;
             tapValue += 1;
             break;
+          case 'WOW':
+            count += 5000;
+            tapValue += 1;
+            break;
+          case 'VOLODYA':
+            count += 1000;
+            tapValue += 1;
+            break;
+          case 'ADMIN_SECRET_PROMOCODES':
+            count += 500000000000;
+            tapValue += 100000000;
+            break;
           default:
             alert("Невірний промокод!");
             return;
         }
-
-        usedPromocodes.push(promocode);
-        localStorage.setItem('usedPromocodes', JSON.stringify(usedPromocodes));
-
         balance.textContent = count;
-        tapProfitElement.textContent = `+${tapValue}`;  
+        tapProfitElement.textContent = `+${tapValue}`;  // Оновлення тексту прибутку за тап
         localStorage.setItem('count', count);
         localStorage.setItem('tapValue', tapValue);
         promocodeContainer.style.display = 'none';
         promocodeInput.value = '';
-        document.querySelector('.promocode-error').style.display = 'none';
       });
 
-      hourlyProfitButton.addEventListener("click", () => {
+      hourlyProfitButton.addEventListener("click", function() {
         hourlyProfitContainer.style.display = 'flex';
       });
 
-      window.addEventListener("beforeunload", () => {
-        localStorage.setItem('count', count);
-        localStorage.setItem('tapValue', tapValue);
-        localStorage.setItem('level', level);
-        localStorage.setItem('nextLevelCost', nextLevelCost);
-        localStorage.setItem('hourlyProfit', hourlyProfit);
-        localStorage.setItem('lastVisit', Date.now());
-        localStorage.setItem('progressValue', progressValue);
+      document.querySelectorAll('.profit-option').forEach(option => {
+        option.addEventListener("click", function() {
+          const cost = parseInt(this.getAttribute('data-cost'));
+          const profit = parseInt(this.getAttribute('data-profit'));
+          if (count >= cost) {
+            count -= cost;
+            hourlyProfit += profit;
+            balance.textContent = count;
+            hourlyProfitElement.textContent = hourlyProfit;
+            localStorage.setItem('count', count);
+            localStorage.setItem('hourlyProfit', hourlyProfit);
+          } else {
+            alert("Недостатньо тапів для покупки!");
+          }
+        });
       });
+
+      // Додавання значення до шкали кожні 3 секунди
+      setInterval(function() {
+        if (progressValue < 3000) {
+          progressValue = Math.min(progressValue + 4, 3000);  // Збільшення значення шкали на 6, але не більше 3000
+          updateProgress();
+          localStorage.setItem('progressValue', progressValue);
+        }
+      }, 3000);
+
+      // Оновлення часу останнього відвідування
+      localStorage.setItem('lastVisit', Date.now());
     });
   </script>
 </head>
 <body>
   <div class="container">
     <div class="stat">
-      <div class="stat-icon">
-        <i class="fas fa-hand-pointer"></i>
-        <span>Кліків за секунду:</span>
-      </div>
-      <span class="stat-value">1</span>
-    </div>
-    <div class="stat">
+      <div class="stat-value">+1</div>
       <div class="stat-icon">
         <i class="fas fa-coins"></i>
-        <span>Монет:</span>
+        <span>Прибуток за тап</span>
       </div>
-      <span class="stat-value">0</span>
     </div>
+
     <div class="stat">
+      <div class="stat-value">500</div>
       <div class="stat-icon">
         <i class="fas fa-coins"></i>
-        <span>Щогодини прибуток:</span>
+        <span>Монет для нового рівню</span>
       </div>
-      <span class="stat-value">0</span>
     </div>
+
+    <div class="stat">
+      <div class="stat-value">0</div>
+      <div class="stat-icon">
+        <i class="fas fa-coins"></i>
+        <span>Прибуток в годину</span>
+      </div>
+    </div>
+
+    <div class="balance">
+      <img src="coin_hamster.png" alt="Coin">
+      <span>0</span>
+    </div>
+
+    <div class="level">
+      <span>Level 1/10</span>
+    </div>
+
     <div class="hamster">
-      <img src="https://www.svgrepo.com/show/253344/hamster.svg" alt="Хом'як">
+      <img src="coin_hamster.png" alt="Hamster">
     </div>
+
     <div class="progress">
-      <span>Прогрес:</span>
+      <span>3000/3000</span> <!-- Початковий текст шкали -->
       <div class="progress-bar">
-        <div class="progress-fill"></div>
+        <div class="progress-fill" style="width: 100%"></div>
       </div>
     </div>
+
     <div class="button-container">
-      <div class="button boost">Збільшення кліків: 1,000 монет</div>
-      <div class="button boost-level">Збільшити рівень: 500 монет</div>
-      <div class="button promocode">Промокод</div>
-      <div class="button hourly-profit">Щогодини прибуток</div>
+      <button class="boost">Boost +1 = 1000</button>
+      <button class="boost-level">Boost level</button>
+      <button class="promocode">PROMOCODE</button>
+      <button class="hourly-profit">Щогодини прибуток/button>
     </div>
+
     <div class="promocode-container">
       <input type="text" class="promocode-input" placeholder="Введіть промокод">
-      <div class="apply-promocode">Застосувати</div>
-      <div class="promocode-error">Цей промокод вже було використано або невірний.</div>
+      <button class="apply-promocode">Apply</button>
     </div>
+
     <div class="hourly-profit-container">
-      <div class="profit-option">
-        <span>100 монет</span>
-      </div>
-      <div class="profit-option">
-        <span>500 монет</span>
-      </div>
-      <div class="profit-option">
-        <span>1000 монет</span>
-      </div>
-      <div class="profit-option">
-        <span>5000 монет</span>
-      </div>
-      <div class="profit-option">
-        <span>10000 монет</span>
-      </div>
-      <div class="profit-option">
-        <span>50000 монет</span>
-      </div>
+      <div class="profit-option" data-cost="5000" data-profit="5">5 000 тапів = + 5 до прибутку за годину <button>Обрати</button></div>
+      <div class="profit-option" data-cost="50000" data-profit="55">50 000 тапів = + 55 до прибутку за годину <button>Обрати</button></div>
+      <div class="profit-option" data-cost="100000" data-profit="125">100 000 тапів = + 125 до прибутку за годину <button>Обрати</button></div>
+      <div class="profit-option" data-cost="1000000" data-profit="1300">1 000 000 тапів = + 1 300 до прибутку за годину <button>Обрати</button></div>
+      <div class="profit-option" data-cost="10000000" data-profit="15000">10 000 000 тапів = + 15 000 до прибутку за годину <button>Обрати</button></div>
     </div>
-    <div class="level">Рівень: <span>1/10</span></div>
   </div>
 </body>
 </html>
