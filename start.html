@@ -1,157 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Авторизація та реєстрація</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 300px;
-            text-align: center;
-        }
-        h2 {
-            color: #333;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin: 8px 0;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .error-message {
-            color: red;
-            margin-top: 10px;
-        }
-        .success-message {
-            color: green;
-            margin-top: 10px;
-        }
-        .registered-info {
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Реєстрація та авторизація</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label, input {
+      display: block;
+      width: 100%;
+    }
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+    }
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Увійдіть у свій акаунт або зареєструйтесь</h2>
-        <div id="authForm">
-            <input type="email" id="email" placeholder="Електронна адреса"><br>
-            <input type="password" id="password" placeholder="Пароль"><br>
-            <button onclick="login()">Увійти</button>
-            <button id="registerBtn" onclick="openRegisterForm()">Зареєструватись</button>
-            <div class="error-message" id="authError"></div>
-        </div>
+  <div class="container">
+    <h2>Реєстрація / Авторизація</h2>
+    <div id="register-form">
+    function register() {
+      var email = document.getElementById('regEmail').value;
+      var password = document.getElementById('regPassword').value;
 
-        <div id="registerForm" style="display: none;">
-            <input type="email" id="regEmail" placeholder="Електронна адреса"><br>
-            <input type="password" id="regPassword" placeholder="Пароль"><br>
-            <button onclick="register()">Зареєструватись</button>
-            <div class="error-message" id="regError"></div>
-        </div>
+      if (!localStorage.getItem(email)) {
+        localStorage.setItem(email, password);
+        document.getElementById('register-error').textContent = 'Реєстрація успішна. Можете увійти.';
+        // Очистити поля відомостей
+        document.getElementById('regEmail').value = '';
+        document.getElementById('regPassword').value = '';
+      } else {
+        document.getElementById('register-error').textContent = 'Ця пошта вже зареєстрована.';
+      }
+    }
 
-        <div id="registeredInfo" class="registered-info" style="display: none;">
-            <h3>Ваші дані:</h3>
-            <p id="registeredEmail"></p>
-            <p id="registeredPassword"></p>
-            <div class="success-message">Ви успішно зареєструвались!</div>
-        </div>
     </div>
 
-    <script>
-        // Список заблокованих адрес
-        var bannedEmails = ["blocked@example.com"];
+    <div id="login-form" style="display: none;">
+  <h3>Авторизація</h3>
+      <div class="form-group">
+        <label for="loginEmail">Email:</label>
+        <input type="email" id="loginEmail" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Пароль:</label>
+        <input type="password" id="loginPassword" required>
+      </div>
+      <input type="submit" value="Увійти" onclick="login()">
+      <div class="error-message" id="login-error"></div>
+    </div>
+  </div>
+    </div>
+  </div>
 
-        // Об'єкт для збереження даних користувачів
-        var users = [
-            { email: "user@example.com", password: "password" }
-        ];
+  <script>
+    // Функція для реєстрації користувача
+    function register() {
+      var email = document.getElementById('regEmail').value;
+      var password = document.getElementById('regPassword').value;
 
-        // Перевірка, чи вже зареєстрована електронна адреса
-        var registeredEmails = [];
+      if (!localStorage.getItem(email)) {
+        localStorage.setItem(email, password);
+        alert('Реєстрація успішна. Можете увійти.');
+        window.location.href = '/index.html'; // Перенаправлення на іншу сторінку
+      } else {
+        alert('Ця пошта вже зареєстрована.');
+      }
+    }
 
-        function isEmailRegistered(email) {
-            return registeredEmails.includes(email);
-        }
+    // Функція для авторизації користувача
+    function login() {
+      var email = document.getElementById('loginEmail').value;
+      var password = document.getElementById('loginPassword').value;
 
-        function login() {
-            var email = document.getElementById('email').value;
-            var password = document.getElementById('password').value;
-
-            if (isBanned(email)) {
-                window.location.href = 'ban.html';
-                return;
-            }
-
-            var user = users.find(u => u.email === email && u.password === password);
-            if (user) {
-                window.location.href = 'index.html';
-            } else {
-                document.getElementById('authError').innerText = 'Дані не вірні!';
-            }
-        }
-
-        function openRegisterForm() {
-            document.getElementById('authForm').style.display = 'none';
-            document.getElementById('registerForm').style.display = 'block';
-            document.getElementById('registerBtn').style.display = 'none'; // Приховуємо кнопку "Зареєструватись"
-        }
-
-        function register() {
-            var email = document.getElementById('regEmail').value;
-            var password = document.getElementById('regPassword').value;
-
-            if (isBanned(email)) {
-                window.location.href = 'ban.html';
-                return;
-            }
-
-            if (isEmailRegistered(email)) {
-                alert('Ця електронна адреса вже зареєстрована!');
-                return;
-            }
-
-            registeredEmails.push(email); // Додаємо до списку зареєстрованих адрес
-
-            users.push({ email: email, password: password });
-            console.log('Зареєстровано:', email, password);
-
-            // Відображення успішного повідомлення та зареєстрованих даних
-            document.getElementById('registeredEmail').innerText = 'Електронна адреса: ' + email;
-            document.getElementById('registeredPassword').innerText = 'Пароль: ' + password;
-            document.getElementById('registerForm').style.display = 'none';
-            document.getElementById('registeredInfo').style.display = 'block';
-        }
-
-        function isBanned(email) {
-            return bannedEmails.includes(email);
-        }
-    </script>
+      if (localStorage.getItem(email) === password) {
+        alert('Авторизація успішна.');
+        window.location.href = '/index.html'; // Перенаправлення на іншу сторінку
+      } else {
+        alert('Неправильний email або пароль.');
+      }
+    }
+  </script>
 </body>
 </html>
